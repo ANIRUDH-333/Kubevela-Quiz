@@ -45,7 +45,7 @@ async function initializeGoogleSheets() {
                     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
                 });
             } catch (error) {
-                console.log('No Google credentials found. Using fallback questions.');
+                console.log('No Google credentials found. Questions will not be available.');
                 return;
             }
         }
@@ -63,7 +63,7 @@ async function initializeGoogleSheets() {
 
     } catch (error) {
         console.error('❌ Error initializing Google Sheets API:', error.message);
-        console.log('📋 Will use fallback questions instead');
+        console.log('📋 Will require Google Sheets configuration for questions');
         isGoogleSheetsConfigured = false;
     }
 }
@@ -161,191 +161,12 @@ function transformSheetDataToQuestions(rows) {
     return questions;
 }
 
-// Enhanced fallback questions with new difficulty-based weightage (Easy=5, Medium=10, Hard=20)
-const fallbackQuestions = [
-    {
-        id: 1,
-        question: "What is the capital of France?",
-        options: ["London", "Berlin", "Paris", "Madrid"],
-        correctAnswer: 2,
-        weightage: 5 // Easy
-    },
-    {
-        id: 2,
-        question: "Which programming language is known for its use in web development and has a React library?",
-        options: ["Python", "JavaScript", "Java", "C++"],
-        correctAnswer: 1,
-        weightage: 10 // Medium
-    },
-    {
-        id: 3,
-        question: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        correctAnswer: 1,
-        weightage: 5 // Easy
-    },
-    {
-        id: 4,
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
-        correctAnswer: 1,
-        weightage: 5 // Easy
-    },
-    {
-        id: 5,
-        question: "What is the largest ocean on Earth?",
-        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-        correctAnswer: 3,
-        weightage: 5 // Easy
-    },
-    {
-        id: 6,
-        question: "Who wrote 'Romeo and Juliet'?",
-        options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-        correctAnswer: 1,
-        weightage: 10 // Medium
-    },
-    {
-        id: 7,
-        question: "What is the chemical symbol for gold?",
-        options: ["Go", "Gd", "Au", "Ag"],
-        correctAnswer: 2,
-        weightage: 10 // Medium
-    },
-    {
-        id: 8,
-        question: "Which year did World War II end?",
-        options: ["1944", "1945", "1946", "1947"],
-        correctAnswer: 1,
-        weightage: 10 // Medium
-    },
-    {
-        id: 9,
-        question: "What is the smallest prime number?",
-        options: ["0", "1", "2", "3"],
-        correctAnswer: 2,
-        weightage: 10 // Medium
-    },
-    {
-        id: 10,
-        question: "Which continent is the largest by area?",
-        options: ["Africa", "Asia", "North America", "Europe"],
-        correctAnswer: 1,
-        weightage: 5 // Easy
-    },
-    {
-        id: 11,
-        question: "What is the speed of light in vacuum?",
-        options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
-        correctAnswer: 0,
-        weightage: 20 // Hard
-    },
-    {
-        id: 12,
-        question: "Which HTML tag is used to create a hyperlink?",
-        options: ["<link>", "<a>", "<href>", "<url>"],
-        correctAnswer: 1,
-        weightage: 5 // Easy
-    },
-    {
-        id: 13,
-        question: "What is the square root of 144?",
-        options: ["10", "11", "12", "13"],
-        correctAnswer: 2,
-        weightage: 5 // Easy
-    },
-    {
-        id: 14,
-        question: "Who painted the Mona Lisa?",
-        options: ["Pablo Picasso", "Vincent van Gogh", "Leonardo da Vinci", "Michelangelo"],
-        correctAnswer: 2,
-        weightage: 10 // Medium
-    },
-    {
-        id: 15,
-        question: "What is the most abundant gas in Earth's atmosphere?",
-        options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-        correctAnswer: 2,
-        weightage: 10 // Medium
-    },
-    {
-        id: 16,
-        question: "In React, what hook is used to manage component state?",
-        options: ["useEffect", "useState", "useContext", "useReducer"],
-        correctAnswer: 1,
-        weightage: 10 // Medium
-    },
-    {
-        id: 17,
-        question: "What is the currency of Japan?",
-        options: ["Yuan", "Won", "Yen", "Dong"],
-        correctAnswer: 2,
-        weightage: 5 // Easy
-    },
-    {
-        id: 18,
-        question: "Which CSS property is used to change text color?",
-        options: ["font-color", "text-color", "color", "background-color"],
-        correctAnswer: 2,
-        weightage: 5 // Easy
-    },
-    {
-        id: 19,
-        question: "What is the tallest mountain in the world?",
-        options: ["K2", "Mount Everest", "Kangchenjunga", "Lhotse"],
-        correctAnswer: 1,
-        weightage: 5 // Easy
-    },
-    {
-        id: 20,
-        question: "Which database query language is most commonly used?",
-        options: ["NoSQL", "SQL", "GraphQL", "MongoDB"],
-        correctAnswer: 1,
-        weightage: 10 // Medium
-    },
-    {
-        id: 21,
-        question: "What is the time complexity of binary search in a sorted array?",
-        options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
-        correctAnswer: 1,
-        weightage: 20 // Hard
-    },
-    {
-        id: 22,
-        question: "In computer science, what does 'NP-Complete' refer to?",
-        options: ["Not Polynomial Complete", "Non-deterministic Polynomial Complete", "Nearly Perfect Complete", "Network Protocol Complete"],
-        correctAnswer: 1,
-        weightage: 20 // Hard
-    },
-    {
-        id: 23,
-        question: "What is the result of 15 % 4 in most programming languages?",
-        options: ["3", "3.75", "4", "1"],
-        correctAnswer: 0,
-        weightage: 10 // Medium
-    },
-    {
-        id: 24,
-        question: "Which sorting algorithm has the best average-case time complexity?",
-        options: ["Bubble Sort", "Quick Sort", "Selection Sort", "Insertion Sort"],
-        correctAnswer: 1,
-        weightage: 20 // Hard
-    },
-    {
-        id: 25,
-        question: "What does HTTP stand for?",
-        options: ["HyperText Transfer Protocol", "High Tech Transfer Protocol", "HyperText Translation Protocol", "Home Tool Transfer Protocol"],
-        correctAnswer: 0,
-        weightage: 5 // Easy
-    }
-];
-
 // Routes
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
         message: 'Quiz backend is running',
-        googleSheets: isGoogleSheetsConfigured ? 'Connected' : 'Using fallback',
+        googleSheets: isGoogleSheetsConfigured ? 'Connected' : 'Not configured - questions unavailable',
         timestamp: new Date().toISOString()
     });
 });
@@ -396,8 +217,8 @@ async function fetchQuestionsFromSheets() {
     }
 
     if (!isGoogleSheetsConfigured) {
-        console.log('🔄 Google Sheets not configured, using fallback questions');
-        return { questions: fallbackQuestions, source: 'fallback' };
+        console.log('❌ Google Sheets not configured, no questions available');
+        throw new Error('Google Sheets not configured - questions not available');
     }
 
     try {
@@ -415,16 +236,16 @@ async function fetchQuestionsFromSheets() {
         });
 
         if (!rows || rows.length === 0) {
-            console.log('📋 No data found in Google Sheets, using fallback questions');
-            return { questions: fallbackQuestions, source: 'fallback' };
+            console.log('❌ No data found in Google Sheets');
+            throw new Error('No data found in Google Sheets');
         }
 
         const questions = transformSheetDataToQuestions(rows);
 
         if (questions.length === 0) {
-            console.log('📋 No valid questions found in Google Sheets, using fallback questions');
+            console.log('❌ No valid questions found in Google Sheets');
             console.log('🔍 Check your sheet format - expected columns: Question, Option1, Option2, Option3, Option4, CorrectAnswer, Weightage');
-            return { questions: fallbackQuestions, source: 'fallback' };
+            throw new Error('No valid questions found in Google Sheets');
         }
 
         // Cache the results
@@ -444,7 +265,8 @@ async function fetchQuestionsFromSheets() {
             return { ...cachedQuestions, source: 'cached-fallback' };
         }
 
-        return { questions: fallbackQuestions, source: 'fallback-error' };
+        // No fallback questions available - re-throw the error
+        throw error;
     }
 }
 
@@ -461,15 +283,13 @@ app.get('/api/questions', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Unexpected error in /api/questions:', error);
+        console.error('❌ Error in /api/questions:', error);
 
-        // Always return something, even if it's just fallback questions
-        res.json({
-            success: true,
-            questions: fallbackQuestions,
-            source: 'fallback-error',
-            count: fallbackQuestions.length,
-            error: 'Unexpected error occurred'
+        // Return error response - no fallback questions available
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch questions from Google Sheets',
+            error: error.message
         });
     }
 });
@@ -731,7 +551,7 @@ app.listen(PORT, async () => {
             console.log(`📈 Google Sheets: CONFIGURED`);
             console.log(`📝 Spreadsheet ID: ${SPREADSHEET_ID}`);
         } else {
-            console.log(`📈 Google Sheets: NOT CONFIGURED - Using fallback questions`);
+            console.log(`📈 Google Sheets: NOT CONFIGURED - Questions unavailable`);
         }
     }, 1000);
 });

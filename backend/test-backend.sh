@@ -37,8 +37,8 @@ QUESTIONS_RESPONSE=$(curl -s http://localhost:5000/api/questions)
 # Check source
 if echo "$QUESTIONS_RESPONSE" | grep -q '"source":"google-sheets"'; then
     echo -e "${GREEN}✓ Questions are loading from Google Sheets${NC}"
-elif echo "$QUESTIONS_RESPONSE" | grep -q '"source":"fallback"'; then
-    echo -e "${YELLOW}⚠ Using fallback questions (Google Sheets not available)${NC}"
+elif echo "$QUESTIONS_RESPONSE" | grep -q '"success":false'; then
+    echo -e "${RED}✗ Questions endpoint returned error (no Google Sheets configured)${NC}"
 else
     echo -e "${RED}✗ Unexpected response from questions endpoint${NC}"
 fi

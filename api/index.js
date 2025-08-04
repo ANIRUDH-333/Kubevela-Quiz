@@ -41,7 +41,7 @@ async function initializeGoogleSheets() {
                 scopes: ['https://www.googleapis.com/auth/spreadsheets'],
             });
         } else {
-            console.log('No Google credentials found. Using fallback questions.');
+            console.log('No Google credentials found. Questions will not be available.');
             return;
         }
 
@@ -57,7 +57,7 @@ async function initializeGoogleSheets() {
 
     } catch (error) {
         console.error('❌ Error initializing Google Sheets API:', error.message);
-        console.log('📋 Will use fallback questions instead');
+        console.log('📋 Will require Google Sheets configuration for questions');
         isGoogleSheetsConfigured = false;
     }
 }
@@ -124,44 +124,7 @@ function transformSheetDataToQuestions(rows) {
     return questions;
 }
 
-// Fallback questions
-const fallbackQuestions = [
-    {
-        id: 1,
-        question: "What is the capital of France?",
-        options: ["London", "Berlin", "Paris", "Madrid"],
-        correctAnswer: 2,
-        weightage: 5
-    },
-    {
-        id: 2,
-        question: "Which programming language is known for its use in web development and has a React library?",
-        options: ["Python", "JavaScript", "Java", "C++"],
-        correctAnswer: 1,
-        weightage: 10
-    },
-    {
-        id: 3,
-        question: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        correctAnswer: 1,
-        weightage: 5
-    },
-    {
-        id: 4,
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
-        correctAnswer: 1,
-        weightage: 5
-    },
-    {
-        id: 5,
-        question: "What is the largest ocean on Earth?",
-        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-        correctAnswer: 3,
-        weightage: 5
-    }
-];
+// No fallback questions - all questions sourced from Google Sheets
 
 let questionsCache = [];
 let lastCacheUpdate = 0;
@@ -196,9 +159,8 @@ async function getQuestions() {
         }
     }
 
-    questionsCache = fallbackQuestions;
-    lastCacheUpdate = now;
-    return questionsCache;
+    // No fallback questions available - throw error
+    throw new Error('Google Sheets not configured and no cached questions available');
 }
 
 // API Routes
@@ -221,7 +183,7 @@ app.get('/api/questions', async (req, res) => {
         res.json({
             questions: selectedQuestions,
             total: questions.length,
-            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Fallback'
+            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Error: No source available'
         });
     } catch (error) {
         console.error('Error in /api/questions:', error);
@@ -263,7 +225,7 @@ app.get('/api/questions/stats', async (req, res) => {
                 medium: questions.filter(q => q.weightage === 10).length,
                 hard: questions.filter(q => q.weightage === 20).length
             },
-            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Fallback',
+            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Error: No source available',
             lastUpdated: new Date(lastCacheUpdate).toISOString()
         };
 
@@ -287,7 +249,7 @@ app.post('/api/questions/refresh', async (req, res) => {
         res.json({
             message: 'Questions cache refreshed',
             count: questions.length,
-            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Fallback'
+            source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Error: No source available'
         });
     } catch (error) {
         console.error('Error in /api/questions/refresh:', error);
