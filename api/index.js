@@ -181,6 +181,7 @@ app.get('/api/questions', async (req, res) => {
         const selectedQuestions = questions.slice(0, Math.min(count, questions.length));
 
         res.json({
+            success: true,
             questions: selectedQuestions,
             total: questions.length,
             source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Error: No source available'
@@ -188,6 +189,7 @@ app.get('/api/questions', async (req, res) => {
     } catch (error) {
         console.error('Error in /api/questions:', error);
         res.status(500).json({
+            success: false,
             error: 'Failed to fetch questions',
             message: error.message
         });
@@ -201,13 +203,20 @@ app.get('/api/questions/:id', async (req, res) => {
         const question = questions.find(q => q.id === questionId);
 
         if (!question) {
-            return res.status(404).json({ error: 'Question not found' });
+            return res.status(404).json({
+                success: false,
+                error: 'Question not found'
+            });
         }
 
-        res.json(question);
+        res.json({
+            success: true,
+            question: question
+        });
     } catch (error) {
         console.error('Error in /api/questions/:id:', error);
         res.status(500).json({
+            success: false,
             error: 'Failed to fetch question',
             message: error.message
         });
@@ -219,6 +228,7 @@ app.get('/api/questions/stats', async (req, res) => {
         const questions = await getQuestions();
 
         const stats = {
+            success: true,
             total: questions.length,
             byWeightage: {
                 easy: questions.filter(q => q.weightage === 5).length,
@@ -233,6 +243,7 @@ app.get('/api/questions/stats', async (req, res) => {
     } catch (error) {
         console.error('Error in /api/questions/stats:', error);
         res.status(500).json({
+            success: false,
             error: 'Failed to fetch stats',
             message: error.message
         });
@@ -247,6 +258,7 @@ app.post('/api/questions/refresh', async (req, res) => {
         const questions = await getQuestions();
 
         res.json({
+            success: true,
             message: 'Questions cache refreshed',
             count: questions.length,
             source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Error: No source available'
@@ -254,6 +266,7 @@ app.post('/api/questions/refresh', async (req, res) => {
     } catch (error) {
         console.error('Error in /api/questions/refresh:', error);
         res.status(500).json({
+            success: false,
             error: 'Failed to refresh questions',
             message: error.message
         });
@@ -269,12 +282,14 @@ app.post('/api/user-data', async (req, res) => {
         // For now, we'll just log it and return success
 
         res.json({
+            success: true,
             message: 'User data received successfully',
             timestamp: new Date().toISOString()
         });
     } catch (error) {
         console.error('Error in /api/user-data:', error);
         res.status(500).json({
+            success: false,
             error: 'Failed to save user data',
             message: error.message
         });
