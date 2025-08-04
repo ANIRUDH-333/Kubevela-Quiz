@@ -69,6 +69,20 @@ const UserRegistration: React.FC<UserRegistrationProps> = ({ onSubmit, isLoading
     return (
         <div className="min-h-screen bg-gray-100 py-8 flex items-center justify-center">
             <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+                {/* Logos */}
+                <div className="flex justify-between items-center mb-6">
+                    <img
+                        src="/oss-summit-logo.jpeg"
+                        alt="OSS Summit Logo"
+                        className="h-10 object-contain"
+                    />
+                    <img
+                        src="/guidewire-logo.png"
+                        alt="Guidewire Logo"
+                        className="h-10 object-contain"
+                    />
+                </div>
+                
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">
                         Welcome to the Quiz

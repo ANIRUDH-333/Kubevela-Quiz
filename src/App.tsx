@@ -263,6 +263,20 @@ const App: React.FC = () => {
             <div className="container mx-auto px-4 max-w-4xl">
                 {/* Header */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                    {/* Logos */}
+                    <div className="flex justify-between items-center mb-6">
+                        <img
+                            src="/oss-summit-logo.jpeg"
+                            alt="OSS Summit Logo"
+                            className="h-12 object-contain"
+                        />
+                        <img
+                            src="/guidewire-logo.png"
+                            alt="Guidewire Logo"
+                            className="h-12 object-contain"
+                        />
+                    </div>
+                    
                     {/* User Info */}
                     {userData && (
                         <div className="bg-gray-50 rounded-lg p-3 mb-4">

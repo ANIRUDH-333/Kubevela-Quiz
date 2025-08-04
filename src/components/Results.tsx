@@ -24,6 +24,20 @@ const Results: React.FC<ResultsProps> = ({ results, userData }) => {
 
     return (
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            {/* Logos */}
+            <div className="flex justify-between items-center mb-6">
+                <img
+                    src="/oss-summit-logo.jpeg"
+                    alt="OSS Summit Logo"
+                    className="h-12 object-contain"
+                />
+                <img
+                    src="/guidewire-logo.png"
+                    alt="Guidewire Logo"
+                    className="h-12 object-contain"
+                />
+            </div>
+            
             {/* User Information */}
             {userData && (
                 <div className="bg-gray-50 rounded-lg p-4 mb-6">
