@@ -25,7 +25,8 @@ const App: React.FC = () => {
         const checkBackend = async () => {
             try {
                 console.log('🏥 Checking backend health...');
-                const response = await fetch('http://localhost:5000/api/health');
+                const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+                const response = await fetch(`${apiUrl}/health`);
                 if (response.ok) {
                     const data = await response.json();
                     setBackendHealth(`✅ ${data.message}`);

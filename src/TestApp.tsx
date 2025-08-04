@@ -8,7 +8,8 @@ const TestApp: React.FC = () => {
         const testBackend = async () => {
             try {
                 console.log('🔗 Testing backend connection...');
-                const response = await fetch('http://localhost:5000/api/health');
+                const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+                const response = await fetch(`${apiUrl}/health`);
                 const data = await response.json();
                 console.log('✅ Backend response:', data);
             } catch (error) {
@@ -27,7 +28,7 @@ const TestApp: React.FC = () => {
             <div style={{ background: '#f0f0f0', padding: '10px', margin: '10px 0' }}>
                 <strong>Environment:</strong>
                 <br />
-                API URL: {import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}
+                API URL: {import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api')}
                 <br />
                 Mode: {import.meta.env.MODE}
                 <br />

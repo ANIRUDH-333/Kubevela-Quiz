@@ -1,6 +1,6 @@
 import { UserData } from '../types/quiz';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 
 export const saveUserData = async (userData: UserData): Promise<{ success: boolean; message: string }> => {
     try {
