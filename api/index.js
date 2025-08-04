@@ -11,6 +11,7 @@ app.use(express.json());
 // Google Sheets configuration
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID;
 const RANGE = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:G';
+const USER_DATA_RANGE = process.env.GOOGLE_SHEETS_USER_DATA_RANGE || 'UserData!A:H';
 
 // Initialize Google Sheets API
 let sheets;
@@ -278,14 +279,65 @@ app.post('/api/user-data', async (req, res) => {
         const userData = req.body;
         console.log('Received user data:', userData);
 
-        // In a real application, you would save this to a database
-        // For now, we'll just log it and return success
+        if (!isGoogleSheetsConfigured) {
+            await initializeGoogleSheets();
+        }
 
-        res.json({
-            success: true,
-            message: 'User data received successfully',
-            timestamp: new Date().toISOString()
-        });
+        if (isGoogleSheetsConfigured) {
+            try {
+                // Prepare user data row for sheets
+                const timestamp = new Date().toISOString();
+                const row = [
+                    timestamp,
+                    userData.name || '',
+                    userData.email || '',
+                    userData.score || 0,
+                    userData.totalQuestions || 0,
+                    userData.correctAnswers || 0,
+                    userData.percentage || 0,
+                    JSON.stringify(userData.answers || {})
+                ];
+
+                // Append to Google Sheets
+                await sheets.spreadsheets.values.append({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: USER_DATA_RANGE,
+                    valueInputOption: 'USER_ENTERED',
+                    insertDataOption: 'INSERT_ROWS',
+                    resource: {
+                        values: [row]
+                    }
+                });
+
+                console.log('✅ User data saved to Google Sheets successfully');
+
+                res.json({
+                    success: true,
+                    message: 'User data saved to Google Sheets successfully',
+                    timestamp: timestamp
+                });
+            } catch (sheetsError) {
+                console.error('❌ Error saving to Google Sheets:', sheetsError);
+                
+                // Fallback: still return success but log the error
+                res.json({
+                    success: true,
+                    message: 'User data received (Google Sheets save failed)',
+                    timestamp: new Date().toISOString(),
+                    warning: 'Data was not saved to Google Sheets'
+                });
+            }
+        } else {
+            // Google Sheets not configured - just log and return success
+            console.log('⚠️ Google Sheets not configured - user data only logged');
+            
+            res.json({
+                success: true,
+                message: 'User data received (Google Sheets not configured)',
+                timestamp: new Date().toISOString(),
+                warning: 'Data was not saved to Google Sheets'
+            });
+        }
     } catch (error) {
         console.error('Error in /api/user-data:', error);
         res.status(500).json({
