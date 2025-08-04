@@ -24,6 +24,9 @@
         }
     ],
     "env": {
-        "NODE_ENV": "production"
-    }
+        "NODE_ENV": "production",
+        "NPM_CONFIG_REGISTRY": "https://registry.npmjs.org/"
+    },
+    "installCommand": "npm config set registry https://registry.npmjs.org/ && npm install",
+    "buildCommand": "npm run build"
 }
