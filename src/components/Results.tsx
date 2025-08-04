@@ -4,20 +4,9 @@ import { QuizResult, UserData } from '../types/quiz';
 interface ResultsProps {
     results: QuizResult;
     userData?: UserData | null;
-    onRetakeQuiz: () => void;
 }
 
-const Results: React.FC<ResultsProps> = ({ results, userData, onRetakeQuiz }) => {
-    const handleRetakeClick = () => {
-        onRetakeQuiz();
-    };
-
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            handleRetakeClick();
-        }
-    };
+const Results: React.FC<ResultsProps> = ({ results, userData }) => {
 
     const getScoreColor = (percentage: number): string => {
         if (percentage >= 80) return 'text-green-600';
@@ -127,12 +116,12 @@ const Results: React.FC<ResultsProps> = ({ results, userData, onRetakeQuiz }) =>
                                     </span>
                                 </div>
                                 <div className="w-full bg-green-200 rounded-full h-2 mt-2">
-                                    <div 
-                                        className="bg-green-600 h-2 rounded-full" 
-                                        style={{ 
-                                            width: `${results.difficultyBreakdown.easy.total > 0 
-                                                ? (results.difficultyBreakdown.easy.correct / results.difficultyBreakdown.easy.total) * 100 
-                                                : 0}%` 
+                                    <div
+                                        className="bg-green-600 h-2 rounded-full"
+                                        style={{
+                                            width: `${results.difficultyBreakdown.easy.total > 0
+                                                ? (results.difficultyBreakdown.easy.correct / results.difficultyBreakdown.easy.total) * 100
+                                                : 0}%`
                                         }}
                                     ></div>
                                 </div>
@@ -159,12 +148,12 @@ const Results: React.FC<ResultsProps> = ({ results, userData, onRetakeQuiz }) =>
                                     </span>
                                 </div>
                                 <div className="w-full bg-yellow-200 rounded-full h-2 mt-2">
-                                    <div 
-                                        className="bg-yellow-600 h-2 rounded-full" 
-                                        style={{ 
-                                            width: `${results.difficultyBreakdown.medium.total > 0 
-                                                ? (results.difficultyBreakdown.medium.correct / results.difficultyBreakdown.medium.total) * 100 
-                                                : 0}%` 
+                                    <div
+                                        className="bg-yellow-600 h-2 rounded-full"
+                                        style={{
+                                            width: `${results.difficultyBreakdown.medium.total > 0
+                                                ? (results.difficultyBreakdown.medium.correct / results.difficultyBreakdown.medium.total) * 100
+                                                : 0}%`
                                         }}
                                     ></div>
                                 </div>
@@ -191,12 +180,12 @@ const Results: React.FC<ResultsProps> = ({ results, userData, onRetakeQuiz }) =>
                                     </span>
                                 </div>
                                 <div className="w-full bg-red-200 rounded-full h-2 mt-2">
-                                    <div 
-                                        className="bg-red-600 h-2 rounded-full" 
-                                        style={{ 
-                                            width: `${results.difficultyBreakdown.hard.total > 0 
-                                                ? (results.difficultyBreakdown.hard.correct / results.difficultyBreakdown.hard.total) * 100 
-                                                : 0}%` 
+                                    <div
+                                        className="bg-red-600 h-2 rounded-full"
+                                        style={{
+                                            width: `${results.difficultyBreakdown.hard.total > 0
+                                                ? (results.difficultyBreakdown.hard.correct / results.difficultyBreakdown.hard.total) * 100
+                                                : 0}%`
                                         }}
                                     ></div>
                                 </div>
@@ -205,18 +194,6 @@ const Results: React.FC<ResultsProps> = ({ results, userData, onRetakeQuiz }) =>
                     </div>
                 </div>
             )}
-
-            <div className="text-center">
-                <button
-                    onClick={handleRetakeClick}
-                    onKeyDown={handleKeyDown}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    tabIndex={0}
-                    aria-label="Retake the quiz"
-                >
-                    Retake Quiz
-                </button>
-            </div>
         </div>
     );
 };

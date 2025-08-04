@@ -179,17 +179,6 @@ const App: React.FC = () => {
         setIsQuizCompleted(true);
     }, [calculateResults]);
 
-    const handleRetakeQuiz = useCallback(() => {
-        // Reset quiz state but keep user data
-        setSelectedQuestions([]);
-        setCurrentQuestionIndex(0);
-        setUserAnswers([]);
-        setIsQuizCompleted(false);
-        setQuizResults(null);
-        setIsQuizStarted(false);
-        // Don't reset userData to avoid re-registration
-    }, []);
-
     const getCurrentAnswer = useCallback((questionId: number): number | null => {
         const answer = userAnswers.find(answer => answer.questionId === questionId);
         return answer ? answer.selectedOption : null;
@@ -219,7 +208,6 @@ const App: React.FC = () => {
                     <Results
                         results={quizResults}
                         userData={userData}
-                        onRetakeQuiz={handleRetakeQuiz}
                     />
                 </div>
             </div>
