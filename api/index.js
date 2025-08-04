@@ -214,10 +214,10 @@ app.get('/api/health', (req, res) => {
 app.get('/api/questions', async (req, res) => {
     try {
         const questions = await getQuestions();
-        
+
         const count = parseInt(req.query.count) || questions.length;
         const selectedQuestions = questions.slice(0, Math.min(count, questions.length));
-        
+
         res.json({
             questions: selectedQuestions,
             total: questions.length,
@@ -237,11 +237,11 @@ app.get('/api/questions/:id', async (req, res) => {
         const questions = await getQuestions();
         const questionId = parseInt(req.params.id);
         const question = questions.find(q => q.id === questionId);
-        
+
         if (!question) {
             return res.status(404).json({ error: 'Question not found' });
         }
-        
+
         res.json(question);
     } catch (error) {
         console.error('Error in /api/questions/:id:', error);
@@ -255,7 +255,7 @@ app.get('/api/questions/:id', async (req, res) => {
 app.get('/api/questions/stats', async (req, res) => {
     try {
         const questions = await getQuestions();
-        
+
         const stats = {
             total: questions.length,
             byWeightage: {
@@ -266,7 +266,7 @@ app.get('/api/questions/stats', async (req, res) => {
             source: isGoogleSheetsConfigured ? 'Google Sheets' : 'Fallback',
             lastUpdated: new Date(lastCacheUpdate).toISOString()
         };
-        
+
         res.json(stats);
     } catch (error) {
         console.error('Error in /api/questions/stats:', error);
@@ -281,9 +281,9 @@ app.post('/api/questions/refresh', async (req, res) => {
     try {
         questionsCache = [];
         lastCacheUpdate = 0;
-        
+
         const questions = await getQuestions();
-        
+
         res.json({
             message: 'Questions cache refreshed',
             count: questions.length,
@@ -302,10 +302,10 @@ app.post('/api/user-data', async (req, res) => {
     try {
         const userData = req.body;
         console.log('Received user data:', userData);
-        
+
         // In a real application, you would save this to a database
         // For now, we'll just log it and return success
-        
+
         res.json({
             message: 'User data received successfully',
             timestamp: new Date().toISOString()

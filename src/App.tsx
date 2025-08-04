@@ -146,7 +146,7 @@ const App: React.FC = () => {
             const question = selectedQuestions.find(q => q.id === answer.questionId);
             if (question && question.correctAnswer === answer.selectedOption) {
                 totalScore += question.weightage;
-                
+
                 // Update difficulty-specific correct answers and points
                 if (question.weightage === 5) {
                     difficultyBreakdown.easy.correct++;
@@ -205,7 +205,7 @@ const App: React.FC = () => {
     // Show registration form if user hasn't registered yet
     if (!userData) {
         return (
-            <UserRegistration 
+            <UserRegistration
                 onSubmit={handleUserRegistration}
                 isLoading={isRegistrationLoading}
             />
@@ -216,10 +216,10 @@ const App: React.FC = () => {
         return (
             <div className="min-h-screen bg-gray-100 py-8">
                 <div className="container mx-auto px-4">
-                    <Results 
-                        results={quizResults} 
+                    <Results
+                        results={quizResults}
                         userData={userData}
-                        onRetakeQuiz={handleRetakeQuiz} 
+                        onRetakeQuiz={handleRetakeQuiz}
                     />
                 </div>
             </div>
